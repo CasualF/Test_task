@@ -2,10 +2,12 @@ from rest_framework import generics, permissions
 from django.contrib.auth import get_user_model
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserRegistrationSerializer, ActivationSerializer
+from .serializers import UserRegistrationSerializer, ActivationSerializer, UserSerializer
 from .tasks import send_activation_email
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
+from rest_framework.viewsets import ModelViewSet
+from .permissions import IsOwnerOfProfile
 
 User = get_user_model()
 
@@ -67,3 +69,24 @@ class ActivationView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response('Successful activation', status=200)
+
+
+class UserView(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = permissions.IsAdminUser,
+
+
+class ProfileView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = IsOwnerOfProfile, permissions.IsAuthenticated
+
+    def get_object(self):
+        queryset = self.get_queryset()
+        user = self.request.user
+        obj = get_object_or_404(queryset, email=user.email)
+
+        self.check_object_permissions(self.request, obj)
+
+        return obj
