@@ -1,8 +1,7 @@
 from rest_framework import generics, permissions
 from django.contrib.auth import get_user_model
-from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import UserRegistrationSerializer, ActivationSerializer, UserSerializer
+from .serializers import UserRegistrationSerializer, ActivationSerializer, UserSerializer, LogoutSerializer
 from .tasks import send_activation_email
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.shortcuts import get_object_or_404
@@ -13,7 +12,7 @@ from .permissions import IsOwnerOfProfile
 User = get_user_model()
 
 
-class UserRegistrationView(APIView):
+class UserRegistrationView(generics.GenericAPIView):
     permission_classes = permissions.AllowAny,
     serializer_class = UserRegistrationSerializer
 
@@ -32,8 +31,9 @@ class UserRegistrationView(APIView):
         return Response(serializer.data, status=201)
 
 
-class LogoutView(APIView):
+class LogoutView(generics.GenericAPIView):
     permission_classes = permissions.IsAuthenticated,
+    serializer_class = LogoutSerializer
 
     def post(self, request):
         try:

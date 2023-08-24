@@ -49,3 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         exclude = ('password', 'groups', 'activation_code', 'is_superuser', 'is_staff', 'user_permissions', 'is_active')
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField(required=True)
