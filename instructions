@@ -1,0 +1,12 @@
+For deployment I used AWS's EC2 service
+To make the process easier I used docker, otherwise
+I would have to manually configure nginx and gunicorn.
+
+I did this:
+1. Prepared docker-compose and nginx configurations
+2. Pushed changes to github repo
+3. Created an instance in EC2 and connected to it
+4. sudo apt update -> sudo apt install docker docker-compose
+5. Cloned my repo and cd {name of repository}
+6. Built and started my project with "sudo docker-compose up --build"
+
