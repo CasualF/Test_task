@@ -9,6 +9,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import ModelViewSet
 from .permissions import IsOwnerOfProfile
 
+
 User = get_user_model()
 
 
@@ -72,6 +73,7 @@ class ActivationView(generics.GenericAPIView):
 
 
 class UserView(ModelViewSet):
+    # User CRUD for admin just in case
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = permissions.IsAdminUser,
@@ -80,6 +82,8 @@ class UserView(ModelViewSet):
 class ProfileView(generics.RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    # I realized afterwords that the custom permission that I made is
+    # practically useless but since I had already made it I just kept it
     permission_classes = IsOwnerOfProfile, permissions.IsAuthenticated
 
     def get_object(self):
