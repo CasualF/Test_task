@@ -8,7 +8,7 @@ from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, Ou
 def send_activation_email(self, email, code):
     subject = 'Activation code'
     message = (f'Click the link in order to activate your account\n'
-               f'http://127.0.0.1:8000/api/account/activate/?c={code}')
+               f'http://16.171.174.219/api/account/activate/?c={code}')
     send_mail(
         subject=subject,
         message=message,
